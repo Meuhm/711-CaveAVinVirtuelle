@@ -1,0 +1,130 @@
+
+
+{% extends 'layout.html' %}
+
+
+{% block main %}
+{#   ==================================
+    #     Partie bouteilles à noter    #
+    ===================================#}
+    {% if dico_bouteilles_a_noter !={} %}
+<h2>Bouteilles à noter :</h2>
+<h3>Il est temps de noter les bouteilles sorties de votre cave :</h3>
+    <form action="/noter" method="POST">
+    <div class="table-container">
+<table>
+
+<thead>
+
+    <tr>
+         <th>Etiquette</th>
+        <th>Nom</th>
+        <th>Domaine</th>
+        <th>Année</th>
+        <th>Région</th>
+        <th>Type</th>
+        <th>Prix</th>
+
+  <th>Commentaire</th>
+        <th>Note moyenne</th>
+         <th>Votre note</th>
+    </tr>
+
+    </thead>
+<tbody>{% for bouteille_a_noter in dico_bouteilles_a_noter.values()  %}<tr>
+<td>
+    <img class="tabelau" src="{{bouteille_a_noter.photo_etiquette}}" alt="">
+    </td>
+    <td>
+        {{bouteille_a_noter.nom }}
+    </td>
+        <td>
+        {{bouteille_a_noter.domaine }}
+    </td>
+        <td>
+        {{bouteille_a_noter.annee }}
+    </td>
+            <td>
+        {{bouteille_a_noter.region }}
+    </td>
+           <td>
+        {{bouteille_a_noter.type_vin }}
+    </td>
+          <td>
+        {{bouteille_a_noter.prix | affichage_prix }}
+    </td>
+         <td><input type="text" name="commentaire_{{ bouteille_a_noter.id }}" value="{{ bouteille_a_noter.commentaire }}"></td>
+         <td> {% for moyenne in moyennes %}
+              {% for id_bouteille, note_moyenne in moyenne.items() %}
+              {% if id_bouteille == bouteille_a_noter.id %}
+
+{{ note_moyenne | affichage_note }}     {% endif %}
+    {% endfor %}
+{% endfor %}
+    </td>
+<td><input  type="number"  id="note_personnelle_{{ bouteille_a_noter.id }}" min="0" max="20" step="0.1" name="note_personnelle_{{ bouteille_a_noter.id }}" value="{{ bouteille_a_noter.note }}" ></td>
+  </td>
+
+
+</tr>
+      {% endfor %}
+</tbody>
+</table>
+    </div>
+    <button  type="submit"><img id="verre" src="" alt="">Valider les notes et commentaires</button>
+    </form>
+{% endif %}
+ <br><br>
+
+ {#   ==================================
+    #       Partie cave               #
+    ===================================#}
+    <h2>Votre cave :</h2>
+
+
+<div class="table-accueil">
+  {% for etagere, emplacements in dico_bouteilles.items() %}
+    <table class="accueil">
+      <thead>
+        <tr>
+          <th colspan="{{ emplacements | length }}">Etagère {{ etagere }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {% for emplacement in emplacements %}
+            <td><span {% if emplacement.bouteille !=None   %}class="numero"{% else %}class="numero_vide" {% endif %}>{{ etagere }}{{ emplacement.numero }}</span></td>
+          {% endfor %}
+        </tr>
+        <tr>
+          {% for emplacement in emplacements %}
+            <td>
+             {% if  emplacement.bouteille  != None %}
+              <img class="tableau" src="{{ emplacement.bouteille.photo_etiquette }}" alt="Étiquette">
+            {% endif %}
+            </td>
+          {% endfor %}
+        </tr>
+        <tr>
+          {% for emplacement in emplacements %}
+              {% if emplacement.bouteille !=None %}
+
+            <td>{{ emplacement.bouteille.domaine }}</td>
+              {% endif %}
+              {% if emplacement.bouteille ==None %}
+              <td><strong>Vide</strong></td>
+              {% endif %}
+          {% endfor %}
+        </tr>
+        <tr>
+          {% for emplacement in emplacements %}
+            <td>{{ emplacement.bouteille.nom }}</td>
+          {% endfor %}
+        </tr>
+      </tbody>
+    </table>
+      <br>
+  {% endfor %}
+</div>
+
+{% endblock %}

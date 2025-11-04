@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<div class="form-container">
+<h2>Visualisez les bouteilles archivées de votre cave selon vos critères</h2>
+
+
+{% if dico_bouteilles == {} %}
+    <h3>Entrez vos critères de recherche :</h3>
+  <form action="/visualiserarchives" method="POST" class="form-box">
+       <label for="nom">Nom :</label>
+    <input type="text" id="nom" name="nom">
+      <label for="domaine">Domaine :</label>
+    <input type="text" id="domaine" name="domaine">
+      <label for="region">Region :</label>
+      <select name="region" id="region">
+          <option value="">Choisir la région viticole</option>
+          {% for region in regions %}
+          <option value="{{ region.nom }}">{{ region.nom }}</option>
+          {% endfor %}
+      </select>
+      <label for="annee">Année :</label>
+    <input type="text" id="annee" name="annee">
+     <div class="container">
+
+        <div class="colonne">
+        <label for="note_min">Note supérieure à</label>
+    <input type="text" id="note_min" name="note_min">
+            </div>
+          <div class="colonne">
+            <label for="note_max">Note inférieure à</label>
+    <input type="text" id="note_max" name="note_max" >
+        </div>
+         </div>
+      <div class="container">
+
+        <div class="colonne">
+        <label for="prix_min">Prix supérieur à (en €) </label>
+    <input type="text" id="prix_min" name="prix_min">
+            </div>
+<div class="colonne">
+            <label for="prix_max">Prix inférieur à (en €)</label>
+    <input type="text" id="prix_max" name="prix_max" >
+        </div>
+         </div>
+    <label for="type_vin">Type:</label>
+      <select name="type_vin" id="">
+          <option value="">Choisir :</option>
+          <option value="rouge">rouge</option>
+          <option value="blanc">blanc</option>
+          <option value="rose">rosé</option>
+      </select>
+
+
+{#<label class="checkbox">
+  <input   type="checkbox" name="emplacements" value="valide">
+  Je souhaite voir leurs emplacements
+</label>#}
+    <button type="submit">Rechercher</button>
+  </form>
+
+
+{% endif %}
+
+
+</div>
+
+{% if dico_bouteilles != {} %}
+    <form action="/visualiserarchives" method="GET">
+    </label>
+    <button type="submit">Nouvelle recherche</button>
+
+       </form>
+
+    <div class="table-container">
+<table>
+
+<thead>
+
+    <tr>
+        <th>Nombre de bouteilles</th>
+         <th>Etiquette</th>
+        <th>Nom</th>
+        <th>Domaine</th>
+        <th>Année</th>
+        <th>Région</th>
+        <th>Type</th>
+        <th>Prix</th>
+        <th>Note personnelle</th>
+        <th>Note moyenne</th>
+  <th>Commentaire</th>
+
+    </tr>
+
+    </thead>
+<tbody>{% for groupe in dico_bouteilles.keys()  %}<tr>
+<td>{{ dico_bouteilles[groupe] |length }}</td>
+<td>
+    <img class="tabelau" src="{{dico_bouteilles[groupe][0].bouteille.photo_etiquette}}" alt="">
+    </td>
+    <td>
+        {{dico_bouteilles[groupe][0].bouteille.nom }}
+    </td>
+        <td>
+        {{dico_bouteilles[groupe][0].bouteille.domaine }}
+    </td>
+        <td>
+        {{dico_bouteilles[groupe][0].bouteille.annee }}
+    </td>
+            <td>
+        {{dico_bouteilles[groupe][0].bouteille.region }}
+    </td>
+           <td>
+        {{dico_bouteilles[groupe][0].bouteille.type_vin }}
+    </td>
+          <td>
+        {{dico_bouteilles[groupe][0].bouteille.prix | affichage_prix }}
+    </td>
+          <td>
+        {{dico_bouteilles[groupe][0].bouteille.note_personnelle | affichage_note }}
+    </td>
+         <td> {% for moyenne in moyennes %}
+              {% for id_bouteille, note_moyenne in moyenne.items() %}
+              {% if id_bouteille == dico_bouteilles[groupe][0].bouteille.id %}
+
+{{ note_moyenne | affichage_note }}     {% endif %}
+    {% endfor %}
+{% endfor %}
+    </td>
+<td>{{ dico_bouteilles[groupe][0].bouteille.commentaire }}</td>
+</tr>
+      {% endfor %}
+</tbody>
+</table>
+</div>
+
+    {% endif %}
+{% endblock %}

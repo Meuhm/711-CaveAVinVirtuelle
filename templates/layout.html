@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>VirtuCave</title>
+    <link rel="stylesheet" href="../static/custom.css">
+<link href="https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap" rel="stylesheet">
+
+<link rel="icon" href="/static/icons8-bouteille-de-vin-64.png"  >
+     <style>
+
+body {
+    margin-left: 3% !important;
+    margin-right: 3% !important;
+    margin-top: 0%;
+    padding: 1%;
+}
+
+.flash {
+    padding: 8px;
+    color: white;
+    border-radius: 15px;
+    font-weight: bold;
+}
+
+        {% block background %}
+        {% endblock %}
+    </style>
+</head>
+<body>
+<div class="header-image">
+<div class="header-text">
+<h1 class="title"><a href="/accueil">Virtu'Cave</a></h1>
+
+<h2>Partageons notre passion du vin !</h2>
+    </div>
+<br>
+</div>
+<nav class="navbar">
+    {% if utilsateur !="" %}
+<p id="user"><strong>{{ utilisateur }}</strong></p>
+    {% endif %}
+    <div class="nav-links">
+
+         <a href="/accueil">Ma cave</a>
+        <a href="/ajouter">Ajouter une bouteille</a>
+
+        <a href="/rechercher">Rechercher des bouteilles</a>
+        <a href="/gereretageres">Gérer ma cave</a>
+         <a href="/visualiserarchives">Archives</a>
+    </div>
+    <div class="nav-actions">
+        <form action="/deconnexion" method="POST">
+            <button type="submit">Se déconnecter</button>
+        </form>
+    </div>
+</nav>
+{% for category, message in get_flashed_messages(with_categories=True) %}
+    <div class="flash {{ category }}">{{ message }}</div>
+{% endfor %}
+{% block main %}
+{% endblock %}
+</body>
+</html>

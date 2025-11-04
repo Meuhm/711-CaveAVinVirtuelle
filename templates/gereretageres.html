@@ -1,0 +1,79 @@
+{% extends 'layout.html' %}
+
+
+{% block main %}
+    <h2>Actualisez la structure de votre cave virtuelle</h2>
+
+<div class="container">
+
+        <div class="form-container colonne">
+         <form action="/gereretageres" method="POST" class="form-box">
+             <h3>Changez une bouteille d'emplacement :</h3>
+             <br>
+            <label for="suppression">Choisissez la bouteille :</label>
+            <select name="bouteille_id" >
+                <option value="">Les bouteilles</option>
+                {% for bouteille in liste_bouteilles %}
+                    {% for emplacement in liste_emplacements_pris %}
+                        {% if emplacement['bouteille_id'] == bouteille.id %}
+                    <option value="{{ bouteille.id }}">{{ emplacement['emplacement'][0] }}{{ emplacement['emplacement'][1] }} | {{ bouteille.nom }}</option>
+                {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+            </select>
+
+            <label for="emplacement">Choisissez le nouvel emplacement: </label>
+            <select name="emplacement_id" id="">
+                <option value="">Les emplacements</option>
+                {% for emplacement_vide in liste_emplacements_vides %}
+                    <option value="{{ emplacement_vide.id }}">
+                        {{ emplacement_vide.etagere }}{{ emplacement_vide.numero }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" name="deplacer">Déplacer</button>
+             </form>
+        </div>
+
+        <div class="form-container colonne">
+           <form action="/gereretageres" method="POST" class="form-box">
+            <h3>Ajoutez ou supprimez des étagères :</h3>
+            <br>
+
+            <h4>Vous disposez actuellement de <strong>{{ total_emplacements  }} emplacements</strong> dans votre cave.
+            </h4>
+            <br>
+           <table class="creation">
+        <thead ><tr><th>Type</th>
+        <th>Nombre d'étagères de ce type</th>
+        <th>Nombre de bouteilles maximum pour ce type d'étagères</th></tr></thead>
+        <tbody>
+        {% for i in range (1,3) %}
+
+        <tr><td>
+            {{ i }}
+        </td>
+        <td><input type="number" name="nombre_etageres_{{ i }}" ></td>
+        <td><input type="number" name="bouteilles_max_par_etagere_{{ i }}"></td>
+      </tr>
+{% endfor %}
+        </tbody>
+    </table>
+            <button type="submit" name="ajouter">Ajouter les étagères</button>
+            <br>
+
+            <br>
+            <label for="suppression">Ou choisissez une étagère vide à supprimer :</label>
+            <select name="etagere" id="">
+                <option value="">Vos étagères vides</option>
+                {% for etagere in liste_etageres_vides %}
+                    <option value="{{ etagere[0] }}">Etagère {{ etagere[0] }} | {{ etagere[1] }} emplacements</option>
+                {% endfor %}
+            </select>
+            <button type="submit" name="supprimer">Supprimer</button>
+        </form>
+        </div>
+
+</div>
+
+
+{% endblock %}

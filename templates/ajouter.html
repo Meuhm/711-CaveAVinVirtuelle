@@ -1,0 +1,164 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    <form action="/ajouter" method="POST">
+        <h2>Etape 1/2- Veuillez renseigner les caractéristiques d'une ou plusieurs nouvelle(s) bouteille(s)
+            (identiques).</h2>
+        <div class="container">
+            <div class="colonne gauche">
+                <div class="form-field"><label for="">Domaine:</label>
+                    <input type="text" name="domaine" required>
+                </div>
+                <div class="form-field"><label for="">Nom:</label>
+                    <input type="text" name="nom" required>
+                </div>
+
+                <div class="form-field"><label for="">Région:</label>
+                    <select name="region" id="region">
+                        <option value="">Sélectionner la région viticole :</option>
+                        {% for region in regions %}
+                            <option value="{{ region.nom }}">{{ region.nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-field">
+                    <div class="container">
+                        <div class="colonne">
+                            <label for="">Type de vin:</label>
+                            <select name="type" id="type">
+                                <option value="rouge">rouge</option>
+                                <option value="blanc">blanc</option>
+                                <option value="rose">rosé</option>
+                            </select>
+                        </div>
+
+                        <div class="colonne">
+                            <label for="">Année:</label>
+                            <input type="text" name="annee" placeholder="ex: 2019" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label for="">Visuel de l'étiquette de la bouteille :</label>
+                    <select name="photo_etiquette" id="photo_etiquette">
+                        <option value="">Sélectionner l'image contenant l'étiquette</option>
+                        {% for photo in photos %}
+                            <option value="{{ photo }}">{{ photo | nom_image }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {#    <input type="file" name="photo_etiquette">#}
+
+                <div class="form-field">
+                    <div class="container">
+                        <div class="colonne prix">
+                            <label for="">Prix d'achat unitaire:</label>
+                            <input type="text" name="prix">
+                        </div>
+                        <div class="colonne nombre">
+                            <label for="">Note personnelle:</label>
+                    <input type="number" name="note_personnelle" min="0" max="20" step="0.1" placeholder="Votre note sur /20">
+                            {#<label for="">Nombre de bouteille:</label>
+                            <input type="number" name="nombre">#}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="">Commentaire:</label>
+                    <textarea name="commentaire" id="" cols="100" rows="5"></textarea>
+                </div>
+                <br><br>
+            </div>
+
+            <div class="colonne droite"> {% for photo in photos %}<img src="{{ photo }}" alt="">
+            {% endfor %}
+            </div>
+        </div>
+        <h2>Etape 2/2- Veuillez ranger votre(vos) nouvelle(s) bouteille(s) dans votre cave.</h2>
+        <h3>Choisissez les emplacements dans lesquels ranger vos bouteilles :</h3>
+        {#{%set liste_etageres=[]%}
+{% for etagere in dico_emplacements.keys() %}
+
+{% if etagere[0] not in liste_etageres %}
+     {% set _=liste_etageres.append(etagere[0])%}
+   <div class="container nombre_bouteilles">
+  <div class="colonne">
+       {% set places_dispo = dico_emplacements[etagere][0]  %}
+      <h2>Étagère {{ etagere[0] }}</h2>
+      <h3>{{ places_dispo}} emplacements disponibles</h3>
+      </div>
+      <div class="colonne ">
+
+        <select name="nb_bouteilles_{{ etagere }}" id="nb_bouteilles_{{ etagere }}">
+            <option value="">Choisir le nombre de bouteilles à ajouter sur l'étagère {{ etagere[0] }}</option>
+            {% for i in range(places_dispo) %}
+                <option value="{{ [etagere[0], i + 1 ]}}">{{ i + 1 }}</option>
+            {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    {% endif %}
+{% endfor %}
+            <br><br>#}
+        <div class="table-accueil">
+            {% for etagere, emplacements in dico_bouteilles.items() %}
+                <table class="accueil">
+                    <thead>
+                    <tr>
+                        <th colspan="{{ emplacements | length }}">Etagère {{ etagere }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        {% for emplacement in emplacements %}
+                        <td><span {% if emplacement.bouteille !=None   %}class="numero"{% else %}class="numero_vide" {% endif %}>{{ etagere }}{{ emplacement.numero }}</span></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% for emplacement in emplacements %}
+                            <td>
+                                {% if  emplacement.bouteille  != None %}
+                                    <img class="tableau" src="{{ emplacement.bouteille.photo_etiquette }}"
+                                         alt="Étiquette">
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% for emplacement in emplacements %}
+                            {% if emplacement.bouteille !=None %}
+
+                                <td>{{ emplacement.bouteille.domaine }}</td>
+                            {% endif %}
+                            {% if emplacement.bouteille ==None %}
+                                <td><strong>Vide</strong></td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% for emplacement in emplacements %}
+                            {% if emplacement.bouteille.nom %}
+                                <td>{{ emplacement.bouteille.nom }}</td>
+                            {% else %}
+                                <td><label class="checkbox">
+                                    <input type="checkbox" name="place"
+                                           value="{{ etagere }},{{ emplacement.numero }}">
+                                    Choisir
+                                </label></td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+
+                    </tbody>
+                </table>
+                <br>
+            {% endfor %}
+        </div>
+        <button type="submit">Ajouter</button>
+    </form>
+
+
+{% endblock %}
+

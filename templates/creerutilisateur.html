@@ -1,0 +1,73 @@
+{% extends 'layout.html' %}
+
+
+{% block main %}
+
+    <div class="form-container">
+<h2>Veuillez renseigner quelques informations avant de commencer.</h2>
+
+    <h3>Votre identité :</h3>
+
+    <form action="/creerutilisateur" method="POST" class="form-box" onsubmit="return validerMdp()">
+
+    <label for="">Nom :</label>
+    <input type="text" name="nom" required>
+
+    <label for="">Prénom:</label>
+    <input type="text" name="prenom" required>
+
+        <label for="">Choisissez votre identifiant de connexion :</label>
+    <input type="text" name="login" required>
+
+        <label for="">Choisissez votre mot de passe :</label>
+    <input type="password" id="password"  required>
+
+         <label for="">Confirmez votre mot de passe :</label>
+    <input type="password" id="confirm_password" name="mot_de_passe" required>
+
+        <label for="">Votre e-mail :</label>
+    <input type="email" name="email" required>
+
+        <hr>
+        <br>
+    <h3>Personnalisez votre cave :</h3>
+
+    <table class="creation">
+        <thead ><tr><th>Type</th>
+        <th>Nombre d'étagères de ce type</th>
+        <th>Nombre de bouteilles maximum pour ce type d'étagères</th></tr></thead>
+        <tbody>
+        {% for i in range (1,11) %}
+        <tr><td>
+            {{ i }}
+        </td>
+        <td><input type="number" name="nombre_etageres_{{ i }}" ></td>
+        <td><input type="number" name="bouteilles_max_par_etagere_{{ i }}"></td>
+      </tr>
+{% endfor %}
+        </tbody>
+    </table>
+{#
+    <label for="">Nombre d'étagères :</label>
+    <input type="number" name="nombre_etageres" required>
+
+    <label for="">Nombre maximum de bouteilles par étagère :</label>
+    <input type="number" name="bouteilles_max_par_etagere" required>
+#}
+
+    <button type="submit">Créer votre compte</button>
+</form>
+</div>
+    <script>
+function validerMdp() {
+  const mdp = document.getElementById("password").value;
+  const confirm = document.getElementById("confirm_password").value;
+
+  if (mdp !== confirm) {
+    alert("Les mots de passe ne correspondent pas !");
+    return false;  // Empêche la soumission
+  }
+  return true;  // Soumission OK, la valeur de confirm_password est envoyée
+}
+</script>
+{% endblock %}

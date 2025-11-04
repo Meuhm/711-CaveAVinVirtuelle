@@ -1,0 +1,21 @@
+
+
+{% extends 'layout.html' %}
+
+
+{% block main %}
+<h2>BIENVENUE</h2>
+<h3>Veuillez vous identifier pour accéder aux fonctionnalités de votre application :</h3>
+<form action="/" method="POST">
+    <label for="">Votre identifiant :</label>
+    <input type="text" name="identifiant">
+    <br><br>
+    <label for="">Votre mot de passe :</label>
+    <input type="password" name="mdp">
+    <br><br><br>
+    <button type="submit">Se Connecter</button></form>
+    <br>
+    <form action="/creerutilisateur" method="GET"><button type="submit">Nouvel utilisateur</button></form>
+
+
+{% endblock %}

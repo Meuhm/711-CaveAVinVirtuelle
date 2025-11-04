@@ -1,0 +1,26 @@
+
+{% extends 'layout.html' %}
+
+
+{% block main %}
+
+<div class="form-container"><h2>BIENVENUE</h2>
+<h3>Veuillez vous identifier pour accéder aux fonctionnalités de votre application :</h3>
+
+  <form action="/login" method="POST" class="form-box">
+    <label for="login">Votre identifiant :</label>
+    <input type="text" id="login" name="login" required>
+
+    <label for="mot_de_passe">Votre mot de passe :</label>
+    <input type="password" id="mot_de_passe" name="mot_de_passe" required>
+
+    <button type="submit">Se Connecter</button>
+  </form>
+
+  <form action="/creerutilisateur" method="GET" class="form-box">
+    <button type="submit">Nouvel utilisateur</button>
+  </form>
+</div>
+
+
+{% endblock %}

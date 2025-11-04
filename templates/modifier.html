@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+
+      <div class="form-container">
+    <h2>Modifier les caractéristiques de votre bouteille si nécessaire</h2>
+
+    <form action="/modifier" method="POST" class="form-box">
+
+                <div class="form-field"><label for="">Domaine:</label>
+                  <input type="text" name="domaine" value="{{notre_bouteille.domaine }}" required>
+                </div>
+                <div class="form-field"><label for="">Nom:</label>
+                     <input type="text" name="nom" value="{{notre_bouteille.nom }}" required>
+                </div>
+
+                <div class="form-field"><label for="">Région:</label>
+                    <select name="region" id="region">
+                        <option value="{{notre_bouteille.region }}">{{notre_bouteille.region }}</option>
+                        {% for region in liste_regions %}
+                            <option value="{{ region.nom }}">{{ region.nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-field">
+                    <div class="container">
+                        <div class="colonne">
+                            <label for="">Type de vin:</label>
+                            <select name="type_vin" id="type_vin">
+                                <option value="{{ notre_bouteille.type_vin }}">{{ notre_bouteille.type_vin }}</option>
+                                <option value="rouge">rouge</option>
+                                <option value="blanc">blanc</option>
+                                <option value="rose">rosé</option>
+                            </select>
+                        </div>
+
+                        <div class="colonne">
+                            <label for="">Année:</label>
+                            <input type="text" name="annee" placeholder="ex: 2019" value="{{ notre_bouteille.annee }}"required>
+                        </div>
+                    </div>
+                </div>
+<div class="form-field">
+                    <label for="">Visuel de l'étiquette de la bouteille :</label>
+                    <select name="photo_etiquette" id="photo_etiquette">
+                        <option value="{{ notre_bouteille.photo_etiquette }}">{{ notre_bouteille.photo_etiquette |nom_image }}</option>
+                        {% for photo in photos %}
+                            <option value="{{ photo }}">{{ photo | nom_image }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {#    <input type="file" name="photo_etiquette">#}
+
+                <div class="form-field">
+                    <div class="container">
+                        <div class="colonne prix">
+                            <label for="">Prix d'achat unitaire:</label>
+                            <input type="text" name="prix" value="{{ notre_bouteille.prix |affichage_prix }}">
+                        </div>
+                        <div class="colonne nombre">
+                            <label for="">Note personnelle sur 20:</label>
+                    <input type="number" name="note_personnelle" min="0" max="20" step="0.1" value="{{ notre_bouteille.note_personnelle }}" placeholder="Votre note sur /20">
+                            {#<label for="">Nombre de bouteille:</label>
+                            <input type="number" name="nombre">#}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="">Commentaire:</label>
+                    <textarea name="commentaire" id="" cols="100" rows="5" value="{{ notre_bouteille.commentaire }}"></textarea>
+                </div>
+
+
+                <br><br>
+
+
+<button  class="" value="{{ notre_bouteille.id }}" name="bouteille_a_modifier" type="submit"><img id="verre" src="/static/icons8-editer-le-fichier-96.png" alt="">Modifier</button>
+  </form>
+    <form action="/accueil" method="GET" class="form-box">
+    <button type="submit">Annuler</button>
+  </form>
+</div>
+
+{% endblock %}
